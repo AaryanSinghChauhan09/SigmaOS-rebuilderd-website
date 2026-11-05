@@ -1,0 +1,8 @@
+[package]
+name = "sigmaos-rebuilderd-website"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Independent rebuild status web frontend — SigmaOS component inspired by Arch Linux infrastructure."
+
+[dependencies]

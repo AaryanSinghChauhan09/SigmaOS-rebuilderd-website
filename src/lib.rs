@@ -1,0 +1,79 @@
+//! Independent rebuild status web frontend
+//!
+//! SigmaOS component inspired by Arch Linux's `rebuilderd-website` repository.
+//! Designed for component isolation, loose coupling, and secure defaults.
+
+use std::fmt;
+
+/// Errors produced by this component. Fail-fast: errors are returned, not panicked.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Sigmaos_rebuilderd_websiteError {
+    /// The requested operation is not valid in the current state.
+    InvalidState,
+    /// Input failed validation.
+    InvalidInput(String),
+}
+
+impl fmt::Display for Sigmaos_rebuilderd_websiteError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::InvalidState => write!(f, "invalid state"),
+            Self::InvalidInput(msg) => write!(f, "invalid input: {msg}"),
+        }
+    }
+}
+
+impl std::error::Error for Sigmaos_rebuilderd_websiteError {}
+
+/// Core component type. Holds configuration; performs no I/O by default.
+#[derive(Debug, Clone, Default)]
+pub struct Sigmaos_rebuilderd_website {
+    name: String,
+}
+
+impl Sigmaos_rebuilderd_website {
+    /// Create a new component instance. Fails fast on empty names.
+    pub fn new(name: impl Into<String>) -> Result<Self, Sigmaos_rebuilderd_websiteError> {
+        let name = name.into();
+        if name.trim().is_empty() {
+            return Err(Sigmaos_rebuilderd_websiteError::InvalidInput("name must not be empty".into()));
+        }
+        Ok(Self { name })
+    }
+
+    /// Component identifier.
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    /// Perform the component's primary action. Returns a deterministic result.
+    pub fn run(&self) -> Result<String, Sigmaos_rebuilderd_websiteError> {
+        if self.name.is_empty() {
+            return Err(Sigmaos_rebuilderd_websiteError::InvalidState);
+        }
+        Ok(format!("{}: ok", self.name))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn new_rejects_empty_name() {
+        // Arrange / Act / Assert
+        assert!(matches!(Sigmaos_rebuilderd_website::new("  "), Err(Sigmaos_rebuilderd_websiteError::InvalidInput(_))));
+    }
+
+    #[test]
+    fn run_returns_deterministic_result() {
+        let c = Sigmaos_rebuilderd_website::new("test").unwrap();
+        assert_eq!(c.run().unwrap(), "test: ok");
+    }
+
+    #[test]
+    fn name_is_accessible() {
+        let c = Sigmaos_rebuilderd_website::new("abc").unwrap();
+        assert_eq!(c.name(), "abc");
+    }
+}
