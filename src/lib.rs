@@ -7,14 +7,14 @@ use std::fmt;
 
 /// Errors produced by this component. Fail-fast: errors are returned, not panicked.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Sigmaos_rebuilderd_websiteError {
+pub enum RebuilderdWebsiteError {
     /// The requested operation is not valid in the current state.
     InvalidState,
     /// Input failed validation.
     InvalidInput(String),
 }
 
-impl fmt::Display for Sigmaos_rebuilderd_websiteError {
+impl fmt::Display for RebuilderdWebsiteError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidState => write!(f, "invalid state"),
@@ -23,20 +23,20 @@ impl fmt::Display for Sigmaos_rebuilderd_websiteError {
     }
 }
 
-impl std::error::Error for Sigmaos_rebuilderd_websiteError {}
+impl std::error::Error for RebuilderdWebsiteError {}
 
 /// Core component type. Holds configuration; performs no I/O by default.
 #[derive(Debug, Clone, Default)]
-pub struct Sigmaos_rebuilderd_website {
+pub struct RebuilderdWebsite {
     name: String,
 }
 
-impl Sigmaos_rebuilderd_website {
+impl RebuilderdWebsite {
     /// Create a new component instance. Fails fast on empty names.
-    pub fn new(name: impl Into<String>) -> Result<Self, Sigmaos_rebuilderd_websiteError> {
+    pub fn new(name: impl Into<String>) -> Result<Self, RebuilderdWebsiteError> {
         let name = name.into();
         if name.trim().is_empty() {
-            return Err(Sigmaos_rebuilderd_websiteError::InvalidInput("name must not be empty".into()));
+            return Err(RebuilderdWebsiteError::InvalidInput("name must not be empty".into()));
         }
         Ok(Self { name })
     }
@@ -47,9 +47,9 @@ impl Sigmaos_rebuilderd_website {
     }
 
     /// Perform the component's primary action. Returns a deterministic result.
-    pub fn run(&self) -> Result<String, Sigmaos_rebuilderd_websiteError> {
+    pub fn run(&self) -> Result<String, RebuilderdWebsiteError> {
         if self.name.is_empty() {
-            return Err(Sigmaos_rebuilderd_websiteError::InvalidState);
+            return Err(RebuilderdWebsiteError::InvalidState);
         }
         Ok(format!("{}: ok", self.name))
     }
@@ -62,18 +62,18 @@ mod tests {
     #[test]
     fn new_rejects_empty_name() {
         // Arrange / Act / Assert
-        assert!(matches!(Sigmaos_rebuilderd_website::new("  "), Err(Sigmaos_rebuilderd_websiteError::InvalidInput(_))));
+        assert!(matches!(RebuilderdWebsite::new("  "), Err(RebuilderdWebsiteError::InvalidInput(_))));
     }
 
     #[test]
     fn run_returns_deterministic_result() {
-        let c = Sigmaos_rebuilderd_website::new("test").unwrap();
+        let c = RebuilderdWebsite::new("test").unwrap();
         assert_eq!(c.run().unwrap(), "test: ok");
     }
 
     #[test]
     fn name_is_accessible() {
-        let c = Sigmaos_rebuilderd_website::new("abc").unwrap();
+        let c = RebuilderdWebsite::new("abc").unwrap();
         assert_eq!(c.name(), "abc");
     }
 }
