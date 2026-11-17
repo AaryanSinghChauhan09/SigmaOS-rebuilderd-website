@@ -3,7 +3,7 @@ name = "SigmaOS-rebuilderd-website"
 tier = 2
 stability = "scaffold"
 language = "rust"
-description = "rebuilderd-website component"
+description = "SigmaOS rebuilderd-website component (Arch Linux inspired)"
 upstream = []
 
 [contract]
