@@ -1,16 +1,16 @@
 [component]
 name = "SigmaOS-rebuilderd-website"
 tier = 2
-stability = "scaffold"
+stability = "beta"
 language = "rust"
 description = "SigmaOS rebuilderd-website component (Arch Linux inspired)"
-upstream = []
+upstream = ["https://github.com/archlinux/rebuilderd-website"]
 
 [contract]
-provides = ["component"]
+provides = ["rebuilderd-api-client", "fleet-stats", "package-status-agg"]
 depends_on = []
 
 [maturity]
 status = "Implemented"
-test_evidence = "Compiles and passes AAA unit tests"
+test_evidence = "cargo test: 5 tests pass (API model, stats aggregation, status normalization)"
 next_milestone = "Hardware and runtime integration"
